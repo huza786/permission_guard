@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:PermissionGuard/view/home_page.dart';
+import 'package:PermissionGuard/viewmodel/get_apps_from_phone.dart';
+import 'package:PermissionGuard/viewmodel/initiating_process.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   bool startAnimation = false;
   bool showLogo = false;
@@ -19,6 +22,13 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initProcess();
+    });
+  }
+
+  void initProcess() async {
+    await ref.watch(initiatingProcess.notifier).initProcess(ref);
     startAnimations();
   }
 
@@ -37,6 +47,10 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
+  Future<void> getData() async {
+    await ref.read(initialAppsListProvider.notifier).getApps();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: AnimatedRotation(
           onEnd: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Homepage()));
+                MaterialPageRoute(builder: (context) => const HomePage()));
           },
           turns: startRotaion ? 1 : 0,
           duration: const Duration(milliseconds: 300),

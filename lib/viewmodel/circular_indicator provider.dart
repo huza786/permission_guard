@@ -13,6 +13,10 @@ final progressTextProvider = StateProvider<String>((ref) {
   final doubleValue = ref.watch(circularIndicatorProvider);
   return doubleValue < 1.0 ? 'Scanning In Progress' : 'Scanning Done';
 });
+final progressboolProvider = StateProvider<bool>((ref) {
+  final doubleValue = ref.watch(circularIndicatorProvider);
+  return doubleValue < 1.0 ? false : true;
+});
 
 class CircularIndicatorCount extends StateNotifier<double> {
   CircularIndicatorCount() : super(0.0);

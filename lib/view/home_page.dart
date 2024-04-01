@@ -2,56 +2,40 @@ import 'package:PermissionGuard/view/components/buttons_row.dart';
 import 'package:PermissionGuard/view/components/circular_progress_widget.dart';
 import 'package:PermissionGuard/view/components/drawer_widget_children.dart';
 import 'package:PermissionGuard/view/components/progress_text.dart';
+import 'package:PermissionGuard/viewmodel/circular_indicator%20provider.dart';
+import 'package:PermissionGuard/viewmodel/extra_permission_category_list_provider.dart';
+import 'package:PermissionGuard/viewmodel/filter_apps_with_permission_provider.dart';
+import 'package:PermissionGuard/viewmodel/get_apps_from_phone.dart';
+import 'package:PermissionGuard/viewmodel/initiating_process.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:android_package_manager/android_package_manager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Homepage extends ConsumerStatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _HomepageState createState() => _HomepageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomepageState extends ConsumerState<Homepage> {
-  List<PackageInfo>? applicationInitialList;
-  List<PackageInfo>? systemAppsList;
-  List<PackageInfo>? finalAppsList;
-  AndroidPackageManager get _pm => AndroidPackageManager();
-  late final int riskyLength;
-  late final int safeLength;
-  late final int extraLength;
+class _HomePageState extends ConsumerState {
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      getApps();
-    });
-  }
-
-  Future<void> getApps() async {
-    final systemflags = PackageInfoFlags({
-      PMFlag.getPermissions,
-      PMFlag.matchSystemOnly,
-    });
-    final appsflag = PackageInfoFlags({
-      PMFlag.getPermissions,
-    });
-    await _pm.getInstalledPackages(flags: appsflag).then(
-          (value) => setState(() => applicationInitialList = value),
-        );
-    await _pm.getInstalledPackages(flags: systemflags).then(
-          (value) => setState(() => systemAppsList = value),
-        );
-    finalAppsList = applicationInitialList
-        ?.where((item) => !systemAppsList!.contains(item))
-        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final appsProvider = ref.watch(initialAppsListProvider);
+
+    final initialList = ref.watch(initialAppsListProvider);
+    final appsFunctions = ref.watch(appListProvider.notifier);
+    final extraAppsFunctions = ref.watch(extraPermissionListProvider.notifier);
+    final progressprovider = ref.watch(initiatingProcess);
+    Future.delayed(Durations.extralong1);
+
     return Scaffold(
       drawer: const NavigationDrawerHomePage(),
       appBar: AppBar(
@@ -82,14 +66,16 @@ class _HomepageState extends ConsumerState<Homepage> {
                   Padding(
                     padding: EdgeInsets.only(top: 30.h),
                     child: Text(
-                      '${finalAppsList?.length ?? 0} Apps have been scanned',
+                      '${progressprovider ? appsProvider?.length : 0} Apps have been scanned',
                       style: const TextStyle(
                         fontSize: 16,
                       ),
                     ),
                   ),
-                  //buttons to do somethings
-                  ButtonRow(finalAppsList: finalAppsList),
+                  //buttons to show apps based on categories
+                  progressprovider
+                      ? ButtonRow(finalAppsList: appsProvider)
+                      : SizedBox.shrink()
                 ],
               ),
             )

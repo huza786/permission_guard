@@ -13,7 +13,7 @@ class NavigationDrawerHomePage extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 42.h, left: 90.w),
-          child: Text(
+          child: const Text(
             'About Us',
             //TODO:Dart mode and light mode optimization
             style: TextStyle(
@@ -22,7 +22,7 @@ class NavigationDrawerHomePage extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(top: 181.h, left: 20.w),
-          child: Text(
+          child: const Text(
             softWrap: true,
             'Empowering You\nTo Control Your Privacy',
             //TODO:Dart mode and light mode optimization
@@ -32,7 +32,7 @@ class NavigationDrawerHomePage extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(top: 48.h, left: 20.w, right: 10.w),
-          child: Text(
+          child: const Text(
             """Welcome to Privacy Guard, your trusted ally in the quest for digital privacy protection. In an era where personal data is increasingly valuable, our mission is to empower you with the tools and knowledge to safeguard your privacy on mobile devices """,
             //TODO:Dart mode and light mode optimization
             style: TextStyle(
@@ -48,7 +48,7 @@ class NavigationDrawerHomePage extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.only(left: 85.w, right: 85.w, top: 228.h),
-            child: CustomShareButton(),
+            child: const CustomShareButton(),
           ),
         )
       ],
@@ -69,12 +69,12 @@ class CustomShareButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.share,
           ),
           Padding(
             padding: EdgeInsets.only(left: 14.h),
-            child: Text(
+            child: const Text(
               'Share',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),

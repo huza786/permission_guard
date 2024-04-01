@@ -32,6 +32,9 @@ class _ExtraPermissionAppsScreenState extends State<ExtraPermissionAppsScreen> {
   @override
   void initState() {
     super.initState();
+    widget.appsList
+        .sort(((a, b) => a.info.packageName!.compareTo(b.info.packageName!)));
+
     filteredAppsList = widget.appsList;
   }
 

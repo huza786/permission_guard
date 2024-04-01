@@ -1,3 +1,5 @@
+import 'package:PermissionGuard/viewmodel/extra_permission_category_list_provider.dart';
+import 'package:PermissionGuard/viewmodel/get_apps_from_phone.dart';
 import 'package:android_package_manager/android_package_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +7,15 @@ final appListProvider =
     StateNotifierProvider<AppListProvider, List<PackageInfo>>((ref) {
   return AppListProvider();
 });
+// final filterListProgressProvider = StateNotifierProvider<bool>((ref) {
+//   final initialList = ref.watch(initialAppsListProvider);
+//   final appsFunctions = ref.watch(appListProvider.notifier);
+//   final extraAppsFunctions = ref.watch(extraPermissionListProvider.notifier);
+//   appsFunctions.getAppsWithPermissions(initialList);
+//   appsFunctions.getAppsWithPermissions(initialList);
+//   extraAppsFunctions.getAppsWithExtraPermissions(initialList);
+//   return true
+// });
 
 class AppListProvider extends StateNotifier<List<PackageInfo>> {
   AppListProvider() : super([]);
