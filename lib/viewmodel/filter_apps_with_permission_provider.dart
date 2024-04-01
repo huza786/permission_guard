@@ -11,8 +11,8 @@ class AppListProvider extends StateNotifier<List<PackageInfo>> {
   List<PackageInfo> appsWithNormalPermissions = [];
   List<PackageInfo> appsWithDangerousPermissions = [];
 
-  Future<List<PackageInfo>> getAppsWithPermissions(
-      List<PackageInfo>? applicationInfoList) async {
+  List<PackageInfo> getAppsWithPermissions(
+      List<PackageInfo>? applicationInfoList) {
     List<String> permissions = [
       "android.permission.CAMERA",
       "android.permission.RECORD_AUDIO", // Microphone
@@ -51,20 +51,8 @@ class AppListProvider extends StateNotifier<List<PackageInfo>> {
     return appsWithoutPermissions;
   }
 
-  Future<List<PackageInfo>> getAppsWithoutPermissions(
-      List<PackageInfo>? applicationInfoList) async {
-    List<String> permissions = [
-      "android.permission.CAMERA",
-      "android.permission.RECORD_AUDIO", // Microphone
-      "android.permission.ACCESS_FINE_LOCATION", // Precise Location
-      "android.permission.READ_CONTACTS",
-      "android.permission.SEND_SMS",
-      "android.permission.READ_CALL_LOG", // Call Logs
-      "android.permission.READ_EXTERNAL_STORAGE", // Storage
-      "android.permission.READ_CALENDAR", // Calendar
-      "android.permission.BLUETOOTH",
-      "android.permission.NFC",
-    ];
+  List<PackageInfo> getAppsWithoutPermissions(
+      List<PackageInfo>? applicationInfoList) {
     final List<PackageInfo> appsWithoutPermissions = [];
 
     if (applicationInfoList != null) {
@@ -79,14 +67,31 @@ class AppListProvider extends StateNotifier<List<PackageInfo>> {
                 info.applicationInfo!.packageName!.startsWith('com.samsung') ||
                 info.applicationInfo!.packageName!.startsWith('com.media'))) {
           if (info.requestedPermissions == null ||
-              !permissions.any((permission) => info.requestedPermissions!
-                  .map((e) => e.toLowerCase())
-                  .contains(permission.toLowerCase()))) {
+              info.requestedPermissions!.isEmpty ||
+              containsOnlySafePermissions(info.requestedPermissions!)) {
             appsWithoutPermissions.add(info);
           }
         }
       }
     }
     return appsWithoutPermissions;
+  }
+
+  bool containsOnlySafePermissions(List<String> permissions) {
+    List<String> safePermissions = [
+      "android.permission.BLUETOOTH",
+      "android.permission.BLUETOOTH_ADMIN",
+      "android.permission.NFC",
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE",
+      // Add other safe permissions as needed
+    ];
+
+    for (var permission in permissions) {
+      if (!safePermissions.contains(permission.toLowerCase())) {
+        return false; // Contains at least one non-safe permission
+      }
+    }
+    return true; // Contains only safe permissions
   }
 }
