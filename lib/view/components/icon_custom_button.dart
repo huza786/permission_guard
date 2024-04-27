@@ -19,7 +19,9 @@ class IconCustomButton extends StatelessWidget {
         Animate(
           effects: const [
             ShimmerEffect(
-                stops: [0, 1], colors: [Colors.transparent, Colors.redAccent])
+                stops: [0, 1],
+                duration: Durations.long4,
+                colors: [Colors.transparent, Colors.redAccent])
           ],
           child: Material(
               elevation: 4,

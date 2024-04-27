@@ -2,10 +2,12 @@ import 'dart:typed_data';
 
 import 'package:PermissionGuard/viewmodel/convert_permission_into_readable_state.dart';
 import 'package:android_package_manager/android_package_manager.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:just_audio/just_audio.dart';
 
 class PermissionScreen extends StatefulWidget {
   final String title;
@@ -26,11 +28,22 @@ class PermissionScreen extends StatefulWidget {
 class _PermissionScreenState extends State<PermissionScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<PackageInfo> filteredAppsList = [];
+  final player = AudioPlayer(); // Create a player
 
+  final assetPath = "audio/risky.mp3";
   @override
   void initState() {
     super.initState();
+
     filteredAppsList = widget.appsList;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // async();
+    });
+  }
+
+  async() async {
+    // await player.setAsset("assets/audio/risky.mp3");
+    // await player.setAsset("assets/audio/risky.mp3");
   }
 
   void filterAppsList(String query) {
@@ -92,7 +105,12 @@ class _PermissionScreenState extends State<PermissionScreen> {
               (context, index) {
                 final info = filteredAppsList[index];
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    // final player = AudioCache();
+                    if (widget.title == "Risky") {
+                      await player.play(AssetSource("risky.mp3"));
+                    }
+
                     showDialog(
                       context: (context),
                       builder: (context) {
